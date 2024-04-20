@@ -1,15 +1,15 @@
 import { Engine } from "@babylonjs/core/Engines/engine";
 import { WebGPUEngine } from "@babylonjs/core/Engines/webgpuEngine";
 import { getScenesModule } from "./createScene";
-import * as GUI from "@babylonjs/gui";
 import { Scene } from "@babylonjs/core";
 
+import * as GUI from "@babylonjs/gui";
 
 export const babylonInit = async (): Promise<void> => {
 
     // Reference the scene creators
     const creatorHome = getScenesModule();
-    const creatorEasy0 = getScenesModule("easy0");
+    const creatorTestScene = getScenesModule("test");
     const creatorUI = getScenesModule("UI");
 
     const engineType =
@@ -40,28 +40,13 @@ export const babylonInit = async (): Promise<void> => {
     }
 
     // Create the scenes
-    // const button = new GUI.Button();
     const UI = await creatorUI.createScene(engine, canvas);
     const home = await creatorHome.createScene(engine, canvas);
-    const easy0 = await creatorEasy0.createScene(engine, canvas);
+    const testScene = await creatorTestScene.createScene(engine, canvas);
 
-    const scenes: Scene[] = [home, easy0];
+    const scenes: Scene[] = [home, testScene];
     
     let currentScene = home;
-
-    // Switch between scenes
-    // (UI.getTextureByName('UI') as GUI.AdvancedDynamicTexture).getControlByName('menuButton')?.onPointerUpObservable.add(()=>{
-    //     if(currentScene === menuScene)
-    //         {
-    //             currentScene = scene0;
-    //         }
-    //         else
-    //         {
-    //             currentScene = menuScene;
-    //         }    
-    // });
-
-    // console.log(GUI.Button.toString());
 
     if(UI.isReady())
     {
@@ -77,19 +62,8 @@ export const babylonInit = async (): Promise<void> => {
                     }); 
                 }               
             }
-
-            // buttons.forEach(b => {
-            //     b.onPointerUpObservable.add(()=>
-            //     {
-
-            //     })
-            // });
         }
     }
-
-    
-
-
 
     // JUST FOR TESTING. Not needed for anything else
     // (window as any).scene = scene;

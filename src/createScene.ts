@@ -4,7 +4,7 @@ import type { Scene } from "@babylonjs/core/scene";
 // Change this import to check other scenes
 import { UI } from "./scenes/UI";
 import { Home } from "./scenes/home";
-import { Easy0 } from "./scenes/Exos/Easy/easy0";
+import { TestScene } from "./scenes/testScene";
 
 
 export interface CreateSceneClass {
@@ -16,19 +16,14 @@ export interface CreateSceneModule {
     default: CreateSceneClass;
 }
 
-// export interface SceneWithExtras {
-//     scene: Scene,
-//     button?: GUI.Button
-// }
-
 export const getSceneModule = (): CreateSceneClass => {
     return new Home();
 }
 
 export const getScenesModule = (sceneName?: string): CreateSceneClass => {
-    if (sceneName === "easy0")
+    if (sceneName === "test")
     {
-        return new Easy0();
+        return new TestScene();
     }
 
     if (sceneName === 'UI')

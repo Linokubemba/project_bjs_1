@@ -2,22 +2,18 @@ import { Engine } from "@babylonjs/core/Engines/engine";
 import { Scene } from "@babylonjs/core/scene";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
-
-import * as GUI from "@babylonjs/gui";
-
-// If you don't need the standard material you will still need to import it since the scene requires it.
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { PBRMaterial } from "@babylonjs/core/Materials/PBR/pbrMaterial";
 import { CreateSceneClass } from "../createScene";
-
 import { DirectionalLight } from "@babylonjs/core/Lights/directionalLight";
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
-import { PointLight } from "@babylonjs/core/Lights/pointLight";
 import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator";
 import { Color3 } from "@babylonjs/core/Maths";
 import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
+
 import * as earcut from "earcut";
+import * as GUI from "@babylonjs/gui";
 
 import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
 import "@babylonjs/core/Loading/loadingScreen";
@@ -36,25 +32,11 @@ export class Home implements CreateSceneClass {
         // This creates a basic Babylon Scene object (non-mesh)
         const scene = new Scene(engine);
 
-        // Uncomment to load the inspector (debugging) asynchronously
-
-        // void Promise.all([
-        //     import("@babylonjs/core/Debug/debugLayer"),
-        //     import("@babylonjs/inspector"),
-        // ]).then((_values) => {
-        //     console.log(_values);
-        //     scene.debugLayer.show({
-        //         handleResize: true,
-        //         overlay: true,
-        //         globalRoot: document.getElementById("#root") || undefined,
-        //     });
-        // });
-
         /////////
         // CAMERA
         /////////
         const camera = new ArcRotateCamera(
-            "my first camera",
+            "arcRotateCamera",
             0,
             Math.PI/2.6,
             10,
@@ -92,22 +74,10 @@ export class Home implements CreateSceneClass {
         dLight.position = dLightOrientation;
 
         // This creates a light, aiming 0,1,0 - to the sky (non-mesh)
-        var hLight = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
+        const hLight = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
 
         // Default intensity is 1. Let's dim the light a small amount
         hLight.intensity = 0.7;
-
-        // //Point light
-        // const pLightPosition: Vector3 = new Vector3(5, 10, -5);
-        // const pLight = new PointLight(
-        //     "pLight",
-        //     pLightPosition,
-        //     scene
-        // );
-
-        // //Light colors
-        // pLight.diffuse = new Color3(0.53, 0.66, 0.74);
-        // pLight.specular = new Color3(0.83, 0.86, 0.89);
     
         /////////
         // ENV
@@ -131,9 +101,6 @@ export class Home implements CreateSceneClass {
         pbr.metallic = 1.0;
         pbr.roughness = 0.15;
         pbr.albedoColor = new Color3(0.3, 0.3, 0.8);  
-        // pbr.subSurface.isRefractionEnabled = true;
-        // pbr.subSurface.indexOfRefraction = 1.5;
-        // pbr.subSurface.tintColor = new Color3(0.0, 0.5, 0.1);
 
         const importResult = await SceneLoader.ImportMeshAsync(
             "",
