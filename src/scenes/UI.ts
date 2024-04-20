@@ -9,13 +9,10 @@ import { CreateSphere } from "@babylonjs/core/Meshes/Builders/sphereBuilder";
 import { CreateGround } from "@babylonjs/core/Meshes/Builders/groundBuilder";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { CreateSceneClass } from "../createScene";
-
-// If you don't need the standard material you will still need to import it since the scene requires it.
-// import "@babylonjs/core/Materials/standardMaterial";
 import { Texture } from "@babylonjs/core/Materials/Textures/texture";
 
-import toolboxTextureUrl from "../../assets/img/toolbox.png"
-import menuTextureUrl from "../../assets/img/menu.png"
+import homeTextureUrl from "../../assets/img/home.png"
+import menuTextureUrl from "../../assets/img/menu_WH.png"
 
 import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
 import "@babylonjs/core/Culling/ray";
@@ -85,22 +82,27 @@ export class UI implements CreateSceneClass {
         // Menu toggle
         // const menuToggle = new GUI.ToggleButton();
         const menuToggle = GUI.Button.CreateImageOnlyButton('menuToggle', menuTextureUrl)
-        menuToggle.width = '0.03';
+        menuToggle.width = '30px';
         menuToggle.fixedRatio = 1;
-        menuToggle.verticalAlignment = 10;
-        menuToggle.horizontalAlignment = 200;
+        menuToggle.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
+        menuToggle.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
         menuToggle.color = "#00000000";
+        if(menuToggle.image)menuToggle.image.alpha = 0.5;
         menuToggle.zIndex = 1000;
         menuToggle.onPointerUpObservable.add(()=>{
             container.isVisible = !container.isVisible;
         })
         advancedTexture.addControl(menuToggle);
 
-        const homeButton = GUI.Button.CreateImageOnlyButton('toolbox', toolboxTextureUrl)
-        homeButton.width = '0.5';
-        homeButton.fixedRatio = 1;
-        homeButton.verticalAlignment = 20;
+        const homeButton = GUI.Button.CreateImageOnlyButton('home', homeTextureUrl)
+        homeButton.width = '0.25';
+        homeButton.fixedRatio = 1.5;
+        homeButton.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+        homeButton.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
+        homeButton.paddingTop = 20;
+        // homeButton.top = -500;
         homeButton.color = "#00000000";
+        if(homeButton.image)homeButton.image.alpha = 0.7;
         container.addControl(homeButton);
 
 

@@ -27,6 +27,7 @@ import "@babylonjs/core/Helpers/sceneHelpers";
 
 // Assets
 import toolboxModel from "../../assets/glb/toolbox_centered.glb";
+import { AbstractMesh } from "@babylonjs/core";
 export class Home implements CreateSceneClass {
     createScene = async (
         engine: Engine,
@@ -143,8 +144,10 @@ export class Home implements CreateSceneClass {
             ".glb"
         );
 
+        const model: AbstractMesh = importResult.meshes[0];
         // just scale it so we can see it better
-        importResult.meshes[0].scaling.scaleInPlace(7);
+        model.scaling.scaleInPlace(7);
+        model.position = new Vector3(model.position.x, model.position.y, model.position.z+0.2);
 
         // 3DText
         const fontData = await (await fetch("https://assets.babylonjs.com/fonts/Droid Sans_Bold.json")).json();
@@ -168,7 +171,7 @@ export class Home implements CreateSceneClass {
         shadowGenerator.blurScale = 2;
         shadowGenerator.setDarkness(0.2);
         
-        shadowGenerator.addShadowCaster(importResult.meshes[0], true)
+        shadowGenerator.addShadowCaster(model, true)
 
         scene.registerBeforeRender(() => {
             //Slowly rotate camera
