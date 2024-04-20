@@ -9,3 +9,6 @@ declare module "*.stl";
 
 // Physics
 declare module "ammo.js";
+
+// Third-party packages without @types
+declare module "meshwriter";

@@ -16,8 +16,6 @@ import { Texture } from "@babylonjs/core/Materials/Textures/texture";
 
 import toolboxTextureUrl from "../../assets/img/toolbox.png"
 import menuTextureUrl from "../../assets/img/menu.png"
-import { DirectionalLight } from "@babylonjs/core/Lights/directionalLight";
-import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator";
 
 import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
 import "@babylonjs/core/Culling/ray";
@@ -68,6 +66,7 @@ export class UI implements CreateSceneClass {
         const container = new GUI.Container();
         container.background = '#FFFFFF55';
         container.width = 0.2;
+        container.zIndex = 999;
 
         // Click effect
         container.onPointerDownObservable.add(()=>{
@@ -91,17 +90,11 @@ export class UI implements CreateSceneClass {
         menuToggle.verticalAlignment = 10;
         menuToggle.horizontalAlignment = 200;
         menuToggle.color = "#00000000";
+        menuToggle.zIndex = 1000;
         menuToggle.onPointerUpObservable.add(()=>{
             container.isVisible = !container.isVisible;
         })
         advancedTexture.addControl(menuToggle);
-
-        // menuToggle.
-        // const menuToggle = GUI.Checkbox.AddCheckBoxWithHeader('menuToggle', ()=>
-        // {
-        //     container.isVisible = !container.isVisible;
-        // });
-        // advancedTexture.addControl(menuToggle);
 
         const homeButton = GUI.Button.CreateImageOnlyButton('toolbox', toolboxTextureUrl)
         homeButton.width = '0.5';
@@ -138,6 +131,8 @@ export class UI implements CreateSceneClass {
         stackPanel.addControl(button0);
         container.addControl(stackPanel);
 
+        
+
         // const buttonScene0 = GUI.Button.CreateSimpleButton('buttonScene0', 'Switch');
         // buttonScene0.width = '200px';
         // buttonScene0.height = '40px';
@@ -154,11 +149,6 @@ export class UI implements CreateSceneClass {
         // Allows loading overlapping scenes
         // so the last scene doesn't erase the previous one(s)
         scene.autoClear = false;
-
-        // const sceneWithExtras: SceneWithExtras = {
-        //     scene: scene,
-        //     button: buttonScene0
-        // }
 
         return scene;
     };

@@ -14,6 +14,8 @@ import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator"
 import { PointLight } from "@babylonjs/core/Lights/pointLight";
 import { Color3 } from "@babylonjs/core/Maths";
 import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
+import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
+import * as earcut from "earcut";
 
 import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
 import "@babylonjs/core/Loading/loadingScreen";
@@ -23,7 +25,6 @@ import "@babylonjs/core/Helpers/sceneHelpers";
 
 // Assets
 import toolboxModel from "../../assets/glb/toolbox_centered.glb";
-
 export class Home implements CreateSceneClass {
     createScene = async (
         engine: Engine,
@@ -127,7 +128,23 @@ export class Home implements CreateSceneClass {
 
         // just scale it so we can see it better
         importResult.meshes[0].scaling.scaleInPlace(7);
-        
+
+        // 3DText
+        const fontData = await (await fetch("https://assets.babylonjs.com/fonts/Droid Sans_Bold.json")).json();
+        const myText = MeshBuilder.CreateText("myText", "Welcome to\n Toolbox 3D", fontData, {
+            size: 0.5,
+            resolution: 32, 
+            depth: 0.1
+        }, scene, earcut);
+
+        if (myText){
+            myText.position = new Vector3(0,3,0);
+            myText.scaling = new Vector3(-1,1,1);
+        }
+
+        //////////
+        // SHADOWS
+        //////////        
         const shadowGenerator = new ShadowGenerator(512, dLight)
         shadowGenerator.useBlurExponentialShadowMap = true;
         shadowGenerator.blurScale = 2;
@@ -138,7 +155,8 @@ export class Home implements CreateSceneClass {
         scene.registerBeforeRender(() => {
             //Slowly rotate camera
             camera.alpha += (0.00005 * scene.getEngine().getDeltaTime());
-            });
+            if(myText) myText.lookAt(camera.position);
+        });
 
         return scene;
     };
