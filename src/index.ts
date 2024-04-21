@@ -73,7 +73,7 @@ export const babylonInit = async (): Promise<void> => {
     // Register a render loop to repeatedly render the scene
     engine.runRenderLoop(function () {
         // currentScene.render();
-        easy0.render();
+        testScene.render();
         UI.render();
     });
 

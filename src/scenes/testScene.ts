@@ -11,7 +11,7 @@ import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator"
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
 import { PBRMaterial } from "@babylonjs/core/Materials/PBR/pbrMaterial";
 import { Color3 } from "@babylonjs/core/Maths/math.color";
-import { AdvancedDynamicTexture, Control, InputText, TextBlock } from "@babylonjs/gui";
+import { AdvancedDynamicTexture, Button, Container, Control, InputText, StackPanel, TextBlock } from "@babylonjs/gui";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 
 import * as earcut from "earcut";
@@ -46,7 +46,7 @@ export class TestScene implements CreateSceneClass {
             "arcRotateCamera",
             0,
             Math.PI/2,
-            5,
+            7,
             new Vector3(0, 1, 0),
             scene
         );
@@ -70,83 +70,82 @@ export class TestScene implements CreateSceneClass {
         pbr.subSurface.isRefractionEnabled = true;
         pbr.subSurface.indexOfRefraction = 1.5;
         pbr.subSurface.tintColor = Color3.Black();
-        
-        // 3DText
-        const fontData = await (await fetch("https://assets.babylonjs.com/fonts/Droid Sans_Bold.json")).json();
-        const myText = MeshBuilder.CreateText("myText", "WINNER!", fontData, {
-            size: 0.5,
-            resolution: 32, 
-            depth: 0.2
-        }, scene, earcut);
 
-        if (myText){
-            myText.position = new Vector3(0,0.5,0);
-            myText.rotation.y = -Math.PI/2;
-            // myText.scaling = new Vector3(-1,1,1);
-            // myText.billboardMode = 1;
-            myText.material = pbr;
-        }
+        const torus = CreateTorusKnot("torus",{
+            radius: 1,
+            tube: 0.5,
+            radialSegments: 128,
+            tubularSegments: 128
+        },
+            scene
+        );
 
-        // const torus = CreateTorusKnot("torus",{
-        //     radius: 1,
-        //     tube: 0.5,
-        //     radialSegments: 128,
-        //     tubularSegments: 128
-        // },
-        //     scene
-        // );
-
-        // torus.position.y = 1;
-        // torus.rotation.y = Math.PI/2;
-        // torus.material = pbr;
+        torus.position.y = 1.2;
+        torus.rotation.y = Math.PI/2;
+        torus.material = pbr;
 
         /**************************** */
-        const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI('UI', true, scene);
+        const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI('UI');
 
         // INSTRUCTIONS
         const userInstructions = new TextBlock();
         userInstructions.text = 
             `PRIMER NUMBER COUNTER
-            Press + to display the next prime number
-            and - to display the previous one`;
+            Press - or + to display the
+            previous or the next prime number`;
         userInstructions.color = "white";
         userInstructions.fontSize = 20;
         userInstructions.top = '30%';
-
-        advancedTexture.addControl(userInstructions); 
-
-        // // INPUT
-        // const input = new InputText();
-        // input.width = 0.2;
-        // input.maxWidth = 0.4;
-        // input.height = "40px";
-        // input.text = "Type your guess here";
-        // input.autoStretchWidth = true;
-        // input.thickness = 0;
-        // input.color = "#AAAAAAAA";
-        // input.background = "#332533FF";
-        // input.focusedBackground = "#221522FF";
-        // input.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
-        // input.top = '20%';
-        // input.onFocusSelectAll = true;
-
-        // Allow numbers only
-        // input.onBeforeKeyAddObservable.add((input)=>{
-        //     let key = input.currentKey;
-        //     if (key < "0" || key > "9") {
-        //         input.addKey = false;
-        //     }
-        // });
-
-        // // Do something when "Enter" is pressed
-        // input.onKeyboardEventProcessedObservable.add(({key})=>{
-        //     if(key === "Enter")
-        //         pbr.roughness = 0;
-        //         pbr.subSurface.tintColor = new Color3(0.1,0.8,0.3);
-        // });
-
-        // advancedTexture.addControl(input);   
+        advancedTexture.addControl(userInstructions);
         
+        // BUTTONS
+        const buttonUp = Button.CreateSimpleButton('buttonUp', '+')
+        buttonUp.horizontalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+        buttonUp.cornerRadius = 5;
+        buttonUp.width = '200px';
+        buttonUp.height = '40px';
+        buttonUp.color = 'green';
+        buttonUp.background = 'teal';
+        if(buttonUp.textBlock != undefined)
+            buttonUp.textBlock.color = 'white';
+
+        const buttonDown = Button.CreateSimpleButton('buttonDown', '-')
+        buttonDown.horizontalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+        buttonDown.cornerRadius = 5;
+        buttonDown.width = '200px';
+        buttonDown.height = '40px';
+        buttonDown.color = 'green';
+        buttonDown.background = 'teal';
+        if(buttonDown.textBlock != undefined)
+            buttonDown.textBlock.color = 'white';
+
+        const stackPanel = new StackPanel();
+        stackPanel.isVertical = false;
+        stackPanel.spacing = 5;
+        stackPanel.addControl(buttonDown);
+        stackPanel.addControl(buttonUp);
+        stackPanel.zIndex = 1000;
+        advancedTexture.addControl(stackPanel);
+        
+        // INTERACTIONS
+        let counter: number = 2;
+        
+        const counterDisplay = new TextBlock();
+        counterDisplay.text = counter.toString();
+        counterDisplay.color = "white";
+        counterDisplay.fontSize = 56;
+        counterDisplay.top = '-20%';
+        advancedTexture.addControl(counterDisplay);
+        
+        buttonDown.onPointerUpObservable.add(()=>{
+            counter--;
+            counterDisplay.text = counter.toString();
+        });
+
+        buttonUp.onPointerUpObservable.add(()=>{
+            counter++;
+            counterDisplay.text = counter.toString();
+        });
         /**************************** */
 
 
