@@ -11,6 +11,7 @@ export const babylonInit = async (): Promise<void> => {
     const creatorHome = getScenesModule();
     const creatorTestScene = getScenesModule("test");
     const creatorUI = getScenesModule("UI");
+    const creatorEasy0 = getScenesModule("easy0");
 
     const engineType =
         location.search.split("engine=")[1]?.split("&")[0] || "webgl";
@@ -43,8 +44,9 @@ export const babylonInit = async (): Promise<void> => {
     const UI = await creatorUI.createScene(engine, canvas);
     const home = await creatorHome.createScene(engine, canvas);
     const testScene = await creatorTestScene.createScene(engine, canvas);
+    const easy0 = await creatorEasy0.createScene(engine, canvas);
 
-    const scenes: Scene[] = [home, testScene];
+    const scenes: Scene[] = [home, easy0];
     
     let currentScene = home;
 
@@ -71,7 +73,7 @@ export const babylonInit = async (): Promise<void> => {
     // Register a render loop to repeatedly render the scene
     engine.runRenderLoop(function () {
         // currentScene.render();
-        testScene.render();
+        easy0.render();
         UI.render();
     });
 

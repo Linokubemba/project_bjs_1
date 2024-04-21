@@ -1,3 +1,7 @@
+/*
+* NUMBER GUESSER
+*/
+
 import { Engine } from "@babylonjs/core/Engines/engine";
 import { Scene } from "@babylonjs/core/scene";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
@@ -17,7 +21,7 @@ import * as earcut from "earcut";
 import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
 import "@babylonjs/core/Culling/ray";
 
-export class TestScene implements CreateSceneClass {
+export class Easy0 implements CreateSceneClass {
     createScene = async (
         engine: Engine,
         canvas: HTMLCanvasElement
@@ -75,10 +79,12 @@ export class TestScene implements CreateSceneClass {
         // INSTRUCTIONS
         const userInstructions = new TextBlock();
         userInstructions.text = 
-            `Guess a number between 0 and 10
+            `NUMBER GUESSER
+            Guess a number between 0 and 10
             If right, the geometry will change color`;
         userInstructions.color = "white";
-        userInstructions.fontSize = 24;
+        userInstructions.fontSize = 20;
+        userInstructions.top = '30%';
         advancedTexture.addControl(userInstructions); 
 
         // INPUT
@@ -93,7 +99,7 @@ export class TestScene implements CreateSceneClass {
         input.background = "#332533FF";
         input.focusedBackground = "#221522FF";
         input.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
-        input.top = '20%';
+        input.top = '10%';
         input.onFocusSelectAll = true;
 
         // Allow numbers only
@@ -153,4 +159,4 @@ export class TestScene implements CreateSceneClass {
     };
 }
 
-export default new TestScene();
+export default new Easy0();

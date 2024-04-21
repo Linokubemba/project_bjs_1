@@ -106,43 +106,46 @@ export class TestScene implements CreateSceneClass {
         // INSTRUCTIONS
         const userInstructions = new TextBlock();
         userInstructions.text = 
-            `Guess a number between 0 and 10
-            If right, the geometry will change color`;
+            `PRIMER NUMBER COUNTER
+            Press + to display the next prime number
+            and - to display the previous one`;
         userInstructions.color = "white";
-        userInstructions.fontSize = 24;
+        userInstructions.fontSize = 20;
+        userInstructions.top = '30%';
+
         advancedTexture.addControl(userInstructions); 
 
-        // INPUT
-        const input = new InputText();
-        input.width = 0.2;
-        input.maxWidth = 0.4;
-        input.height = "40px";
-        input.text = "Type your guess here";
-        input.autoStretchWidth = true;
-        input.thickness = 0;
-        input.color = "#AAAAAAAA";
-        input.background = "#332533FF";
-        input.focusedBackground = "#221522FF";
-        input.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
-        input.top = '20%';
-        input.onFocusSelectAll = true;
+        // // INPUT
+        // const input = new InputText();
+        // input.width = 0.2;
+        // input.maxWidth = 0.4;
+        // input.height = "40px";
+        // input.text = "Type your guess here";
+        // input.autoStretchWidth = true;
+        // input.thickness = 0;
+        // input.color = "#AAAAAAAA";
+        // input.background = "#332533FF";
+        // input.focusedBackground = "#221522FF";
+        // input.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+        // input.top = '20%';
+        // input.onFocusSelectAll = true;
 
         // Allow numbers only
-        input.onBeforeKeyAddObservable.add((input)=>{
-            let key = input.currentKey;
-            if (key < "0" || key > "9") {
-                input.addKey = false;
-            }
-        });
+        // input.onBeforeKeyAddObservable.add((input)=>{
+        //     let key = input.currentKey;
+        //     if (key < "0" || key > "9") {
+        //         input.addKey = false;
+        //     }
+        // });
 
-        // Do something when "Enter" is pressed
-        input.onKeyboardEventProcessedObservable.add(({key})=>{
-            if(key === "Enter")
-                pbr.roughness = 0;
-                pbr.subSurface.tintColor = new Color3(0.1,0.8,0.3);
-        });
+        // // Do something when "Enter" is pressed
+        // input.onKeyboardEventProcessedObservable.add(({key})=>{
+        //     if(key === "Enter")
+        //         pbr.roughness = 0;
+        //         pbr.subSurface.tintColor = new Color3(0.1,0.8,0.3);
+        // });
 
-        advancedTexture.addControl(input);   
+        // advancedTexture.addControl(input);   
         
         /**************************** */
 
@@ -181,7 +184,7 @@ export class TestScene implements CreateSceneClass {
         shadowGenerator.useBlurExponentialShadowMap = true;
         shadowGenerator.blurScale = 2;
         shadowGenerator.setDarkness(0.2);
-        
+
         return scene;
     };
 }
