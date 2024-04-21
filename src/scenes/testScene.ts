@@ -11,9 +11,7 @@ import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator"
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
 import { PBRMaterial } from "@babylonjs/core/Materials/PBR/pbrMaterial";
 import { Color3 } from "@babylonjs/core/Maths/math.color";
-
-import * as GUI from "@babylonjs/gui";
-
+import { AdvancedDynamicTexture, Control, InputText } from "@babylonjs/gui";
 import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
 import "@babylonjs/core/Culling/ray";
 
@@ -54,7 +52,6 @@ export class TestScene implements CreateSceneClass {
         camera.upperRadiusLimit = 10;
         camera.lowerRadiusLimit = 2;
         camera._panningMouseButton = 0;
-        camera.target = new Vector3(0,2,0);
 
         // This targets the camera to scene origin
         camera.setTarget(Vector3.Zero());
@@ -83,6 +80,27 @@ export class TestScene implements CreateSceneClass {
         torus.position.y = 1;
         torus.rotation.y = Math.PI/2;
         torus.material = pbr;
+
+        /**************************** */
+        const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI('UI', true, scene);
+
+        const input = new InputText();
+        input.width = 0.2;
+        input.maxWidth = 0.2;
+        input.height = "40px";
+        input.text = "Type your guess here";
+        input.autoStretchWidth = true;
+        input.thickness = 0;
+        input.color = "#AAAAAAAA";
+        input.background = "#332533FF";
+        input.focusedBackground = "#221522FF";
+        input.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+        // input.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
+        input.top = '20%';
+
+        advancedTexture.addControl(input);   
+        
+        /**************************** */
 
 
         /////////
