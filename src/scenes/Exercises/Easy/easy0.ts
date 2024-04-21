@@ -2,10 +2,8 @@ import { Engine } from "@babylonjs/core/Engines/engine";
 import { Scene } from "@babylonjs/core/scene";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
-import { CreateTorusKnot } from "@babylonjs/core/Meshes/Builders/torusKnotBuilder";
-import { CreateGround } from "@babylonjs/core/Meshes/Builders/groundBuilder";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
-import { CreateSceneClass } from "../createScene";
+import { CreateSceneClass } from "../../../createScene";
 import { DirectionalLight } from "@babylonjs/core/Lights/directionalLight";
 import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator";
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
@@ -26,20 +24,6 @@ export class TestScene implements CreateSceneClass {
     ): Promise<Scene> => {
         // This creates a basic Babylon Scene object (non-mesh)
         const scene = new Scene(engine);
-
-        // Uncomment to load the inspector (debugging) asynchronously
-
-        // void Promise.all([
-        //     import("@babylonjs/core/Debug/debugLayer"),
-        //     import("@babylonjs/inspector"),
-        // ]).then((_values) => {
-        //     console.log(_values);
-        //     scene.debugLayer.show({
-        //         handleResize: true,
-        //         overlay: true,
-        //         globalRoot: document.getElementById("#root") || undefined,
-        //     });
-        // });
 
         // This creates and positions a free camera (non-mesh)
         const camera = new ArcRotateCamera(
@@ -82,23 +66,8 @@ export class TestScene implements CreateSceneClass {
         if (myText){
             myText.position = new Vector3(0,0.5,0);
             myText.rotation.y = -Math.PI/2;
-            // myText.scaling = new Vector3(-1,1,1);
-            // myText.billboardMode = 1;
             myText.material = pbr;
         }
-
-        // const torus = CreateTorusKnot("torus",{
-        //     radius: 1,
-        //     tube: 0.5,
-        //     radialSegments: 128,
-        //     tubularSegments: 128
-        // },
-        //     scene
-        // );
-
-        // torus.position.y = 1;
-        // torus.rotation.y = Math.PI/2;
-        // torus.material = pbr;
 
         /**************************** */
         const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI('UI', true, scene);
@@ -142,10 +111,8 @@ export class TestScene implements CreateSceneClass {
                 pbr.subSurface.tintColor = new Color3(0.1,0.8,0.3);
         });
 
-        advancedTexture.addControl(input);   
-        
+        advancedTexture.addControl(input);           
         /**************************** */
-
 
         /////////
         // LIGHTS

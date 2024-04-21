@@ -13,7 +13,7 @@ import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 
 import * as earcut from "earcut";
-import * as GUI from "@babylonjs/gui";
+// import * as GUI from "@babylonjs/gui";
 
 import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
 import "@babylonjs/core/Loading/loadingScreen";
