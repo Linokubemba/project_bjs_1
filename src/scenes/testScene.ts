@@ -1,5 +1,5 @@
 /*
-* STAIRCASE SWITCHES
+* STACK GEN AND SORT
 */
 
 import { Engine } from "@babylonjs/core/Engines/engine";
@@ -30,6 +30,7 @@ import lightbulbModel from "../../assets/glb/incandescent_light_bulb.glb";
 import point from "../../assets/img/point.png"
 import line from "../../assets/img/line.png"
 import room from "../../assets/environment/room.env"
+import { CreateBox } from "@babylonjs/core";
 
 export class TestScene implements CreateSceneClass {
     createScene = async (
@@ -54,11 +55,11 @@ export class TestScene implements CreateSceneClass {
         // });
 
         // This creates and positions a free camera (non-mesh)
-        const cameraRadius: number = 7;
+        const cameraRadius: number = 15;
         const camera = new ArcRotateCamera(
             "arcRotateCamera",
-            Math.PI/2,
-            Math.PI/2,
+            Math.PI/2.5,
+            Math.PI/2.1,
             cameraRadius,
             new Vector3(0, 1, 0),
             scene
@@ -76,25 +77,6 @@ export class TestScene implements CreateSceneClass {
         // This attaches the camera to the canvas
         camera.attachControl(canvas, true);
 
-        // Import 3D model
-        const importResult = await SceneLoader.ImportMeshAsync(
-            "",
-            "",
-            lightbulbModel,
-            scene,
-            undefined,
-            ".glb"
-        );
-
-        let bulb: AbstractMesh = new AbstractMesh('bulbPlaceholder');
-        importResult.meshes.forEach(mesh => {
-            console.log(mesh.name);
-            mesh.scaling.scaleInPlace(4);
-
-            if(mesh.name === "Object_5")
-                bulb = mesh;
-        });
-
         //Create PBR material
         const pbr = new PBRMaterial("pbr", scene);
         pbr.metallic = 0;
@@ -103,62 +85,65 @@ export class TestScene implements CreateSceneClass {
         pbr.subSurface.indexOfRefraction = 1.5;
         pbr.subSurface.tintColor = Color3.White();
 
-        bulb.material = pbr;
-
         /**************************** */
         const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI('UI');
 
         // INSTRUCTIONS
         const userInstructions = new TextBlock();
         userInstructions.text = 
-            `STAIRCASE SWTICHES
-            Use the switch buttons to control the light
-            The light is ON when both switches have the same shape`;
+            `STACK GEN AND SORT
+            Use the buttons to generate a stack of random cubes
+            and to sort them from the biggest (bottom) to the smallest (top)`;
         userInstructions.color = "white";
         userInstructions.fontSize = 20;
         userInstructions.top = '30%';
         advancedTexture.addControl(userInstructions);
         
         // BUTTONS
-        const leftSwitch = Button.CreateImageOnlyButton("leftSwitch", point);
-        const rightSwitch = Button.CreateImageOnlyButton("rightSwitch", line);
+        const generateButton = Button.CreateSimpleButton("generateButton", "GENERATE");
+        const sortButton = Button.CreateSimpleButton("sortButton", "SORT");
 
-        leftSwitch.horizontalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
-        leftSwitch.cornerRadius = 10;
-        leftSwitch.width = '50px';
-        leftSwitch.height = '50px';
-        leftSwitch.color = 'white';
-        leftSwitch.background = '#AAAAAA';
-        if(leftSwitch.textBlock != undefined)
-            leftSwitch.textBlock.color = 'white';
+        generateButton.horizontalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+        generateButton.cornerRadius = 10;
+        generateButton.width = '200px';
+        generateButton.height = '50px';
+        generateButton.color = 'white';
+        generateButton.background = '#AA7777';
+        if(generateButton.textBlock != undefined)
+            generateButton.textBlock.color = 'white';
 
-        rightSwitch.horizontalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
-        rightSwitch.cornerRadius = 10;
-        rightSwitch.width = '50px';
-        rightSwitch.height = '50px';
-        rightSwitch.color = 'white';
-        rightSwitch.background = '#AAAAAA';
-        if(rightSwitch.textBlock != undefined)
-            rightSwitch.textBlock.color = 'white';
+        sortButton.horizontalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+        sortButton.cornerRadius = 10;
+        sortButton.width = '200px';
+        sortButton.height = '50px';
+        sortButton.color = 'white';
+        sortButton.background = '#7777AA';
+        if(sortButton.textBlock != undefined)
+            sortButton.textBlock.color = 'white';
 
         const stackPanel = new StackPanel();
         stackPanel.isVertical = false;
         stackPanel.spacing = 50;
-        stackPanel.top = '10%';
-        stackPanel.addControl(leftSwitch);
-        stackPanel.addControl(rightSwitch);
+        stackPanel.top = '15%';
+        stackPanel.addControl(generateButton);
+        stackPanel.addControl(sortButton);
         stackPanel.zIndex = 1000;
         advancedTexture.addControl(stackPanel);
-        
+
         //TODO: Do something when buttons are pressed
-        leftSwitch.onPointerUpObservable.add(()=>{
-            pbr.emissiveColor = Color3.White();
-        });
+        generateButton.onPointerUpObservable.add(()=>{
+            const box = CreateBox('box',
+                {
+                    size: 1,
+                    width: 2,
+                    height: 0.5,
+                }, scene
+            );
 
-        rightSwitch.onPointerUpObservable.add(()=>{
-            pbr.emissiveColor = Color3.Black();
+            const box0 = box.createInstance("box0");
+            box0.position = new Vector3(0,1,0);
+            box0.scaling = new Vector3(1.5,1.5,1.5);
         });
-
         /**************************** */
 
         /////////
