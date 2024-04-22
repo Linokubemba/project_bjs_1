@@ -35,20 +35,21 @@ export class Home implements CreateSceneClass {
         /////////
         // CAMERA
         /////////
+        const cameraRadius: number = 10;
         const camera = new ArcRotateCamera(
             "arcRotateCamera",
             0,
             Math.PI/2.6,
-            10,
+            cameraRadius,
             new Vector3(0, 1, 0),
             scene
         );
 
         camera.minZ = 0.1;
         camera.wheelDeltaPercentage = 0.01;
-        camera.upperRadiusLimit = 10;
-        camera.lowerRadiusLimit = 2;
-        camera._panningMouseButton = 0;
+        camera.upperRadiusLimit = cameraRadius;
+        camera.lowerRadiusLimit = cameraRadius;
+        camera.panningSensibility = 0;
         camera.target = new Vector3(0,2,0);
         
         // This attaches the camera to the canvas

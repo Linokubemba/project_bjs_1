@@ -1,27 +1,21 @@
 /*
-* NUMBER GUESSER
+* PRIME COUNTER
 */
 
 import { Engine } from "@babylonjs/core/Engines/engine";
 import { Scene } from "@babylonjs/core/scene";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
+import { CreateTorusKnot } from "@babylonjs/core/Meshes/Builders/torusKnotBuilder";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
-import { CreateSceneClass } from "../../../createScene";
+import { CreateSceneClass } from "../../createScene";
 import { DirectionalLight } from "@babylonjs/core/Lights/directionalLight";
-import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator";
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
 import { PBRMaterial } from "@babylonjs/core/Materials/PBR/pbrMaterial";
 import { Color3 } from "@babylonjs/core/Maths/math.color";
-import { AdvancedDynamicTexture, Control, InputText, TextBlock } from "@babylonjs/gui";
-import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
+import { AdvancedDynamicTexture, Button, Control, StackPanel, TextBlock } from "@babylonjs/gui";
 
-import * as earcut from "earcut";
-
-import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
-import "@babylonjs/core/Culling/ray";
-
-export class Easy0 implements CreateSceneClass {
+export class TestScene implements CreateSceneClass {
     createScene = async (
         engine: Engine,
         canvas: HTMLCanvasElement
@@ -30,20 +24,21 @@ export class Easy0 implements CreateSceneClass {
         const scene = new Scene(engine);
 
         // This creates and positions a free camera (non-mesh)
+        const cameraRadius: number = 7;
         const camera = new ArcRotateCamera(
             "arcRotateCamera",
             0,
             Math.PI/2,
-            5,
+            cameraRadius,
             new Vector3(0, 1, 0),
             scene
         );
 
         camera.minZ = 0.1;
         camera.wheelDeltaPercentage = 0.01;
-        camera.upperRadiusLimit = 10;
-        camera.lowerRadiusLimit = 2;
-        camera._panningMouseButton = 0;
+        camera.upperRadiusLimit = cameraRadius;
+        camera.lowerRadiusLimit = cameraRadius;
+        camera.panningSensibility = 0;
 
         // This targets the camera to scene origin
         camera.setTarget(Vector3.Zero());
@@ -58,67 +53,85 @@ export class Easy0 implements CreateSceneClass {
         pbr.subSurface.isRefractionEnabled = true;
         pbr.subSurface.indexOfRefraction = 1.5;
         pbr.subSurface.tintColor = Color3.Black();
-        
-        // 3DText
-        const fontData = await (await fetch("https://assets.babylonjs.com/fonts/Droid Sans_Bold.json")).json();
-        const myText = MeshBuilder.CreateText("myText", "WINNER!", fontData, {
-            size: 0.5,
-            resolution: 32, 
-            depth: 0.2
-        }, scene, earcut);
 
-        if (myText){
-            myText.position = new Vector3(0,0.5,0);
-            myText.rotation.y = -Math.PI/2;
-            myText.material = pbr;
-        }
+        const torus = CreateTorusKnot("torus",{
+            radius: 1,
+            tube: 0.5,
+            radialSegments: 128,
+            tubularSegments: 128
+        },
+            scene
+        );
+
+        torus.position.y = 1.2;
+        torus.rotation.y = Math.PI/2;
+        torus.material = pbr;
 
         //* ***************************************
-        const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI('UI', true, scene);
+        const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI('UI');
 
         // INSTRUCTIONS
         const userInstructions = new TextBlock();
         userInstructions.text = 
-            `NUMBER GUESSER
-            Guess a number between 0 and 10
-            If right, the geometry will change color`;
+            `PRIMER NUMBER COUNTER
+            Press - or + to display the
+            previous or the next prime number`;
         userInstructions.color = "white";
         userInstructions.fontSize = 20;
         userInstructions.top = '30%';
-        advancedTexture.addControl(userInstructions); 
+        advancedTexture.addControl(userInstructions);
+        
+        // BUTTONS
+        const buttonUp = Button.CreateSimpleButton('buttonUp', '+')
+        buttonUp.horizontalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+        buttonUp.cornerRadius = 5;
+        buttonUp.width = '200px';
+        buttonUp.height = '40px';
+        buttonUp.color = 'green';
+        buttonUp.background = 'teal';
+        if(buttonUp.textBlock != undefined)
+            buttonUp.textBlock.color = 'white';
 
-        // INPUT
-        const input = new InputText();
-        input.width = 0.2;
-        input.maxWidth = 0.4;
-        input.height = "40px";
-        input.text = "Type your guess here";
-        input.autoStretchWidth = true;
-        input.thickness = 0;
-        input.color = "#AAAAAAAA";
-        input.background = "#332533FF";
-        input.focusedBackground = "#221522FF";
-        input.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
-        input.top = '10%';
-        input.onFocusSelectAll = true;
+        const buttonDown = Button.CreateSimpleButton('buttonDown', '-')
+        buttonDown.horizontalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+        buttonDown.cornerRadius = 5;
+        buttonDown.width = '200px';
+        buttonDown.height = '40px';
+        buttonDown.color = 'green';
+        buttonDown.background = 'teal';
+        if(buttonDown.textBlock != undefined)
+            buttonDown.textBlock.color = 'white';
 
-        // Allow numbers only
-        input.onBeforeKeyAddObservable.add((input)=>{
-            let key = input.currentKey;
-            if (key < "0" || key > "9") {
-                input.addKey = false;
-            }
+        const stackPanel = new StackPanel();
+        stackPanel.isVertical = false;
+        stackPanel.spacing = 5;
+        stackPanel.addControl(buttonDown);
+        stackPanel.addControl(buttonUp);
+        stackPanel.zIndex = 1000;
+        advancedTexture.addControl(stackPanel);
+        
+        // INTERACTIONS
+        let counter: number = 2;
+        
+        const counterDisplay = new TextBlock();
+        counterDisplay.text = counter.toString();
+        counterDisplay.color = "white";
+        counterDisplay.fontSize = 56;
+        counterDisplay.top = '-20%';
+        advancedTexture.addControl(counterDisplay);
+        
+        //TODO: Do something when buttons are pressed
+        buttonDown.onPointerUpObservable.add(()=>{
+            counter--;
+            counterDisplay.text = counter.toString();
         });
 
-        //TODO: Do something when "Enter" is pressed
-        input.onKeyboardEventProcessedObservable.add(({key})=>{
-            if(key === "Enter")
-                pbr.roughness = 0;
-                pbr.subSurface.tintColor = new Color3(0.1,0.8,0.3);
+        buttonUp.onPointerUpObservable.add(()=>{
+            counter++;
+            counterDisplay.text = counter.toString();
         });
-
-        advancedTexture.addControl(input);           
         //* ***************************************
+
 
         /////////
         // LIGHTS
@@ -149,9 +162,9 @@ export class Easy0 implements CreateSceneClass {
             skyboxColor: new Color3(0.01,0.01,0.01),
             createGround: false,
         });
-        
+
         return scene;
     };
 }
 
-export default new Easy0();
+export default new TestScene();

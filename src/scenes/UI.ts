@@ -16,8 +16,7 @@ import "@babylonjs/core/Culling/ray";
 export class UI implements CreateSceneClass {
     createScene = async (
         engine: Engine,
-        canvas: HTMLCanvasElement,
-        button?: GUI.Button
+        canvas: HTMLCanvasElement
     ): Promise<Scene> => {
         // This creates a basic Babylon Scene object (non-mesh)
         const scene = new Scene(engine);

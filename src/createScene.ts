@@ -5,7 +5,7 @@ import type { Scene } from "@babylonjs/core/scene";
 import { UI } from "./scenes/UI";
 import { Home } from "./scenes/home";
 import { TestScene } from "./scenes/testScene";
-import { Easy0 } from  "./scenes/Exercises/Easy/easy0";
+import { Easy0 } from  "./scenes/Exercises/ex0";
 
 
 export interface CreateSceneClass {
