@@ -1,9 +1,12 @@
+/*
+* PRIME COUNTER
+*/
+
 import { Engine } from "@babylonjs/core/Engines/engine";
 import { Scene } from "@babylonjs/core/scene";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { CreateTorusKnot } from "@babylonjs/core/Meshes/Builders/torusKnotBuilder";
-import { CreateGround } from "@babylonjs/core/Meshes/Builders/groundBuilder";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { CreateSceneClass } from "../../../createScene";
 import { DirectionalLight } from "@babylonjs/core/Lights/directionalLight";
@@ -11,10 +14,7 @@ import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator"
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
 import { PBRMaterial } from "@babylonjs/core/Materials/PBR/pbrMaterial";
 import { Color3 } from "@babylonjs/core/Maths/math.color";
-import { AdvancedDynamicTexture, Button, Container, Control, InputText, StackPanel, TextBlock } from "@babylonjs/gui";
-import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
-
-import * as earcut from "earcut";
+import { AdvancedDynamicTexture, Button, Container, Control, StackPanel, TextBlock } from "@babylonjs/gui";
 
 import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
 import "@babylonjs/core/Culling/ray";

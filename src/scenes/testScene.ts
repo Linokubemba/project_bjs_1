@@ -11,13 +11,16 @@ import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator"
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
 import { PBRMaterial } from "@babylonjs/core/Materials/PBR/pbrMaterial";
 import { Color3 } from "@babylonjs/core/Maths/math.color";
-import { AdvancedDynamicTexture, Button, Container, Control, InputText, StackPanel, TextBlock } from "@babylonjs/gui";
+import { AdvancedDynamicTexture, Button, Container, Control, StackPanel, TextBlock } from "@babylonjs/gui";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
-
-import * as earcut from "earcut";
+import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
+import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
 
 import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
 import "@babylonjs/core/Culling/ray";
+
+// Assets
+import lightbulbModel from "../../assets/glb/incandescent_light_bulb.glb";
 
 export class TestScene implements CreateSceneClass {
     createScene = async (
@@ -62,6 +65,21 @@ export class TestScene implements CreateSceneClass {
 
         // This attaches the camera to the canvas
         camera.attachControl(canvas, true);
+
+        // Import 3D model
+        const importResult = await SceneLoader.ImportMeshAsync(
+            "",
+            "",
+            lightbulbModel,
+            scene,
+            undefined,
+            ".glb"
+        );
+
+        const model: AbstractMesh = importResult.meshes[0];
+        // just scale it so we can see it better
+        model.scaling.scaleInPlace(7);
+        model.position = new Vector3(model.position.x, model.position.y, model.position.z+0.2);
 
         //Create PBR material
         const pbr = new PBRMaterial("pbr", scene);

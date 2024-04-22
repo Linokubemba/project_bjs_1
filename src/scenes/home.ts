@@ -11,9 +11,9 @@ import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator"
 import { Color3 } from "@babylonjs/core/Maths";
 import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
+import { AbstractMesh } from "@babylonjs/core";
 
 import * as earcut from "earcut";
-// import * as GUI from "@babylonjs/gui";
 
 import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
 import "@babylonjs/core/Loading/loadingScreen";
@@ -23,7 +23,7 @@ import "@babylonjs/core/Helpers/sceneHelpers";
 
 // Assets
 import toolboxModel from "../../assets/glb/toolbox_centered.glb";
-import { AbstractMesh } from "@babylonjs/core";
+
 export class Home implements CreateSceneClass {
     createScene = async (
         engine: Engine,
