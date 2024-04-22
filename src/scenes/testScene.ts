@@ -137,6 +137,7 @@ export class TestScene implements CreateSceneClass {
         counterDisplay.top = '-20%';
         advancedTexture.addControl(counterDisplay);
         
+        //TODO: Do something when buttons are pressed
         buttonDown.onPointerUpObservable.add(()=>{
             counter--;
             counterDisplay.text = counter.toString();
