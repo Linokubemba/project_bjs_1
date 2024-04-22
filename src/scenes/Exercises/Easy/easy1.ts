@@ -27,20 +27,6 @@ export class TestScene implements CreateSceneClass {
         // This creates a basic Babylon Scene object (non-mesh)
         const scene = new Scene(engine);
 
-        // Uncomment to load the inspector (debugging) asynchronously
-
-        // void Promise.all([
-        //     import("@babylonjs/core/Debug/debugLayer"),
-        //     import("@babylonjs/inspector"),
-        // ]).then((_values) => {
-        //     console.log(_values);
-        //     scene.debugLayer.show({
-        //         handleResize: true,
-        //         overlay: true,
-        //         globalRoot: document.getElementById("#root") || undefined,
-        //     });
-        // });
-
         // This creates and positions a free camera (non-mesh)
         const camera = new ArcRotateCamera(
             "arcRotateCamera",
@@ -179,11 +165,6 @@ export class TestScene implements CreateSceneClass {
             skyboxColor: new Color3(0.01,0.01,0.01),
             createGround: false,
         });
-
-        const shadowGenerator = new ShadowGenerator(512, dLight)
-        shadowGenerator.useBlurExponentialShadowMap = true;
-        shadowGenerator.blurScale = 2;
-        shadowGenerator.setDarkness(0.2);
 
         return scene;
     };

@@ -6,30 +6,21 @@ import { Engine } from "@babylonjs/core/Engines/engine";
 import { Scene } from "@babylonjs/core/scene";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
-import { CreateTorusKnot } from "@babylonjs/core/Meshes/Builders/torusKnotBuilder";
-import { CreateGround } from "@babylonjs/core/Meshes/Builders/groundBuilder";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
-import { CreateSceneClass } from "../createScene";
+import { CreateSceneClass } from "../../../createScene";
 import { DirectionalLight } from "@babylonjs/core/Lights/directionalLight";
-import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator";
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
 import { PBRMaterial } from "@babylonjs/core/Materials/PBR/pbrMaterial";
 import { Color3 } from "@babylonjs/core/Maths/math.color";
-import { AdvancedDynamicTexture, Button, Container, Control, StackPanel, TextBlock } from "@babylonjs/gui";
-import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
+import { AdvancedDynamicTexture, Button, Control, StackPanel, TextBlock } from "@babylonjs/gui";
 import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
 import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
 import { GlowLayer } from "@babylonjs/core/Layers/glowLayer";
-import { CubeTexture } from "@babylonjs/core/Materials/Textures/cubeTexture";
-
-// import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
-// import "@babylonjs/core/Culling/ray";
 
 // Assets
 import lightbulbModel from "../../assets/glb/incandescent_light_bulb.glb";
 import point from "../../assets/img/point.png"
 import line from "../../assets/img/line.png"
-import room from "../../assets/environment/room.env"
 
 export class TestScene implements CreateSceneClass {
     createScene = async (
@@ -38,20 +29,6 @@ export class TestScene implements CreateSceneClass {
     ): Promise<Scene> => {
         // This creates a basic Babylon Scene object (non-mesh)
         const scene = new Scene(engine);
-
-        // Uncomment to load the inspector (debugging) asynchronously
-
-        // void Promise.all([
-        //     import("@babylonjs/core/Debug/debugLayer"),
-        //     import("@babylonjs/inspector"),
-        // ]).then((_values) => {
-        //     console.log(_values);
-        //     scene.debugLayer.show({
-        //         handleResize: true,
-        //         overlay: true,
-        //         globalRoot: document.getElementById("#root") || undefined,
-        //     });
-        // });
 
         // This creates and positions a free camera (non-mesh)
         const cameraRadius: number = 7;
@@ -86,6 +63,7 @@ export class TestScene implements CreateSceneClass {
             ".glb"
         );
 
+        // Scale the meshes and isolate the glass bulb (for emission)
         let bulb: AbstractMesh = new AbstractMesh('bulbPlaceholder');
         importResult.meshes.forEach(mesh => {
             console.log(mesh.name);
@@ -190,9 +168,6 @@ export class TestScene implements CreateSceneClass {
             skyboxColor: new Color3(0.01,0.01,0.01),
             createGround: false,
         });
-
-        // const hdrTexture = CubeTexture.CreateFromPrefilteredData(room, scene);
-        // scene.environmentTexture = hdrTexture;
 
         const glow = new GlowLayer("glow", scene, {
             mainTextureFixedSize: 2024,

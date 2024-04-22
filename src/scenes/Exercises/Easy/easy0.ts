@@ -149,11 +149,6 @@ export class Easy0 implements CreateSceneClass {
             skyboxColor: new Color3(0.01,0.01,0.01),
             createGround: false,
         });
-
-        const shadowGenerator = new ShadowGenerator(512, dLight)
-        shadowGenerator.useBlurExponentialShadowMap = true;
-        shadowGenerator.blurScale = 2;
-        shadowGenerator.setDarkness(0.2);
         
         return scene;
     };
