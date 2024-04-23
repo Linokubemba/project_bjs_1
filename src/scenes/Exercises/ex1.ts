@@ -15,7 +15,7 @@ import { PBRMaterial } from "@babylonjs/core/Materials/PBR/pbrMaterial";
 import { Color3 } from "@babylonjs/core/Maths/math.color";
 import { AdvancedDynamicTexture, Button, Control, StackPanel, TextBlock } from "@babylonjs/gui";
 
-export class TestScene implements CreateSceneClass {
+export class Ex1 implements CreateSceneClass {
     createScene = async (
         engine: Engine,
         canvas: HTMLCanvasElement
@@ -167,4 +167,4 @@ export class TestScene implements CreateSceneClass {
     };
 }
 
-export default new TestScene();
+export default new Ex1();

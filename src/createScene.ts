@@ -5,7 +5,6 @@ import type { Scene } from "@babylonjs/core/scene";
 import { UI } from "./scenes/UI";
 import { Home } from "./scenes/home";
 import { TestScene } from "./scenes/testScene";
-import { Easy0 } from  "./scenes/Exercises/ex0";
 
 
 export interface CreateSceneClass {
@@ -21,14 +20,10 @@ export const getSceneModule = (): CreateSceneClass => {
     return new Home();
 }
 
-export const getScenesModule = (sceneName?: string): CreateSceneClass => {
+export const getSceneByNameModule = (sceneName?: string): CreateSceneClass => {
     if (sceneName === "test")
     {
         return new TestScene();
-    }
-    if (sceneName === "easy0")
-    {
-        return new Easy0();
     }
 
     if (sceneName === 'UI')

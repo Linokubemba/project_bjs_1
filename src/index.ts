@@ -1,6 +1,6 @@
 import { Engine } from "@babylonjs/core/Engines/engine";
 import { WebGPUEngine } from "@babylonjs/core/Engines/webgpuEngine";
-import { getScenesModule } from "./createScene";
+import { getSceneByNameModule } from "./createScene";
 import { Scene } from "@babylonjs/core";
 
 import * as GUI from "@babylonjs/gui";
@@ -8,10 +8,9 @@ import * as GUI from "@babylonjs/gui";
 export const babylonInit = async (): Promise<void> => {
 
     // Reference the scene creators
-    const creatorHome = getScenesModule();
-    const creatorTestScene = getScenesModule("test");
-    const creatorUI = getScenesModule("UI");
-    const creatorEasy0 = getScenesModule("easy0");
+    const creatorHome = getSceneByNameModule();
+    const creatorTestScene = getSceneByNameModule("test");
+    const creatorUI = getSceneByNameModule("UI");
 
     const engineType =
         location.search.split("engine=")[1]?.split("&")[0] || "webgl";
@@ -44,9 +43,8 @@ export const babylonInit = async (): Promise<void> => {
     const UI = await creatorUI.createScene(engine, canvas);
     const home = await creatorHome.createScene(engine, canvas);
     const testScene = await creatorTestScene.createScene(engine, canvas);
-    const easy0 = await creatorEasy0.createScene(engine, canvas);
 
-    const scenes: Scene[] = [home, easy0];
+    const scenes: Scene[] = [home, testScene];
     
     let currentScene = home;
 
@@ -72,9 +70,8 @@ export const babylonInit = async (): Promise<void> => {
 
     // Register a render loop to repeatedly render the scene
     engine.runRenderLoop(function () {
-        // currentScene.render();
-        testScene.render();
-        // easy0.render();
+        currentScene.render();
+        // testScene.render();
         // home.render();
         UI.render();
     });

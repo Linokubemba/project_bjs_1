@@ -19,7 +19,7 @@ import { CreateSphere, Mesh } from "@babylonjs/core";
 // Assets
 import ABC from  "../../assets/data/ABC.json"
 
-export class TestScene implements CreateSceneClass {
+export class Ex4 implements CreateSceneClass {
     createScene = async (
         engine: Engine,
         canvas: HTMLCanvasElement
@@ -115,6 +115,7 @@ export class TestScene implements CreateSceneClass {
         input.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
         input.top = '10%';
         input.onFocusSelectAll = true;
+        advancedTexture.addControl(input);
 
         //TODO: Do something when "Enter" is pressed
         // input.onKeyboardEventProcessedObservable.add(({key})=>{
@@ -124,7 +125,8 @@ export class TestScene implements CreateSceneClass {
         //         animate = true;
         // });
 
-        advancedTexture.addControl(input);
+        //TODO: [OPTIONAL] Do something every second (alternate ON/OFF(padawan level) or pan letters(jedi level))
+
         /**************************** */
 
         /////////
@@ -167,4 +169,4 @@ export class TestScene implements CreateSceneClass {
     };
 }
 
-export default new TestScene();
+export default new Ex4();

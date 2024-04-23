@@ -17,7 +17,7 @@ import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 
 import * as earcut from "earcut";
 
-export class Easy0 implements CreateSceneClass {
+export class Ex0 implements CreateSceneClass {
     createScene = async (
         engine: Engine,
         canvas: HTMLCanvasElement
@@ -165,4 +165,4 @@ export class Easy0 implements CreateSceneClass {
     };
 }
 
-export default new Easy0();
+export default new Ex0();

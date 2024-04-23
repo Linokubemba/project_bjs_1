@@ -22,7 +22,7 @@ import lightbulbModel from "../../assets/glb/incandescent_light_bulb.glb";
 import point from "../../assets/img/point.png"
 import line from "../../assets/img/line.png"
 
-export class TestScene implements CreateSceneClass {
+export class Ex2 implements CreateSceneClass {
     createScene = async (
         engine: Engine,
         canvas: HTMLCanvasElement
@@ -179,4 +179,4 @@ export class TestScene implements CreateSceneClass {
     };
 }
 
-export default new TestScene();
+export default new Ex2();
