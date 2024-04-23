@@ -1,5 +1,6 @@
-# Source
-Original template: https://github.com/RaananW/babylonjs-webpack-es6
+# Description
+
+Base project to practice some programming foundations using TypeScript and Babylon.js 3D visuals. Based on https://github.com/RaananW/babylonjs-webpack-es6
 
 # Babylon.js, webpack and es6 modules
 
