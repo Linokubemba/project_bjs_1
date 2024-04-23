@@ -75,6 +75,7 @@ export const babylonInit = async (): Promise<void> => {
         // currentScene.render();
         testScene.render();
         // easy0.render();
+        // home.render();
         UI.render();
     });
 

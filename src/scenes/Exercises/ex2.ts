@@ -170,7 +170,7 @@ export class TestScene implements CreateSceneClass {
         });
 
         const glow = new GlowLayer("glow", scene, {
-            mainTextureFixedSize: 2024,
+            mainTextureFixedSize: 2048,
             blurKernelSize: 128,
         });
         glow.intensity = 0.5;
