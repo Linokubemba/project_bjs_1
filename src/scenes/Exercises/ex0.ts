@@ -7,7 +7,7 @@ import { Scene } from "@babylonjs/core/scene";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
-import { CreateSceneClass } from "../../createScene";
+import { CreateSceneClass } from "../createScene";
 import { DirectionalLight } from "@babylonjs/core/Lights/directionalLight";
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
 import { PBRMaterial } from "@babylonjs/core/Materials/PBR/pbrMaterial";
@@ -17,7 +17,7 @@ import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 
 import * as earcut from "earcut";
 
-export class Ex0 implements CreateSceneClass {
+export class TestScene implements CreateSceneClass {
     createScene = async (
         engine: Engine,
         canvas: HTMLCanvasElement
@@ -29,8 +29,8 @@ export class Ex0 implements CreateSceneClass {
         const cameraRadius: number = 5;
         const camera = new ArcRotateCamera(
             "arcRotateCamera",
-            Math.PI/2,
-            Math.PI/2,
+            Math.PI / 2,
+            Math.PI / 2,
             cameraRadius,
             new Vector3(0, 1, 0),
             scene
@@ -55,19 +55,19 @@ export class Ex0 implements CreateSceneClass {
         pbr.subSurface.isRefractionEnabled = true;
         pbr.subSurface.indexOfRefraction = 1.5;
         pbr.subSurface.tintColor = Color3.Black();
-        const pbrEmissive: Color3 = new Color3(0,0,0);
-        
+        const pbrEmissive: Color3 = new Color3(0, 0, 0);
+
         // 3DText
         const fontData = await (await fetch("https://assets.babylonjs.com/fonts/Droid Sans_Bold.json")).json();
         const myText = MeshBuilder.CreateText("myText", "WINNER!", fontData, {
             size: 0.5,
-            resolution: 32, 
+            resolution: 32,
             depth: 0.2
         }, scene, earcut);
 
-        if (myText){
-            myText.position = new Vector3(0,0.5,0);
-            myText.scaling = new Vector3(-1,1,1);
+        if (myText) {
+            myText.position = new Vector3(0, 0.5, 0);
+            myText.scaling = new Vector3(-1, 1, 1);
             myText.material = pbr;
         }
 
@@ -76,14 +76,14 @@ export class Ex0 implements CreateSceneClass {
 
         // INSTRUCTIONS
         const userInstructions = new TextBlock();
-        userInstructions.text = 
+        userInstructions.text =
             `NUMBER GUESSER
             Guess a number between 0 and 10
             If right, the geometry will change color`;
         userInstructions.color = "white";
         userInstructions.fontSize = 20;
         userInstructions.top = '30%';
-        advancedTexture.addControl(userInstructions); 
+        advancedTexture.addControl(userInstructions);
 
         // INPUT
         const input = new InputText();
@@ -101,23 +101,37 @@ export class Ex0 implements CreateSceneClass {
         input.onFocusSelectAll = true;
 
         // Allow numbers only
-        input.onBeforeKeyAddObservable.add((input)=>{
-            let key = input.currentKey;
+        input.onBeforeKeyAddObservable.add((input) => {
+            const key = input.currentKey;
             if (key < "0" || key > "9") {
                 input.addKey = false;
             }
         });
 
         //TODO: Do something when "Enter" is pressed
+        const RANDOMGUESS: number = Math.floor(Math.random() * 10);
         let animate: boolean = false;
-        input.onKeyboardEventProcessedObservable.add(({key})=>{
-            if(key === "Enter")
-                pbr.roughness = 0;
-                pbr.subSurface.tintColor = new Color3(0.1,0.8,0.3);
-                animate = true;
+
+        input.onKeyboardEventProcessedObservable.add((obj) => {
+            const USERGUESS = Number(input.text);
+            if (obj.key === "Enter")
+            {
+                if  (USERGUESS === RANDOMGUESS)
+                {
+                    pbr.roughness = 0;
+                    pbr.subSurface.tintColor = new Color3(0.1, 0.8, 0.3);
+                    animate = true;
+                }
+                else if (USERGUESS < RANDOMGUESS)
+                {
+                    input.text = "Too low!";
+                }
+                else { input.text = "Too high!"; }
+
+            }
         });
 
-        advancedTexture.addControl(input);           
+        advancedTexture.addControl(input);
         //* ***************************************
 
         /////////
@@ -146,23 +160,23 @@ export class Ex0 implements CreateSceneClass {
         const env = scene.createDefaultEnvironment({
             createSkybox: true,
             skyboxSize: 150,
-            skyboxColor: new Color3(0.01,0.01,0.01),
+            skyboxColor: new Color3(0.01, 0.01, 0.01),
             createGround: false,
         });
 
         let angle: number = 0;
-        scene.registerBeforeRender(()=>{
-            if(animate){
+        scene.registerBeforeRender(() => {
+            if (animate) {
                 camera.alpha += (0.00005 * scene.getEngine().getDeltaTime());
-                if(myText) myText.lookAt(camera.position);
-                pbrEmissive.r, pbrEmissive.g, pbrEmissive.b = Math.sin(angle)*Math.sin(angle);
+                if (myText) myText.lookAt(camera.position);
+                pbrEmissive.r, pbrEmissive.g, pbrEmissive.b = Math.sin(angle) * Math.sin(angle);
                 angle += 0.01;
                 pbr.emissiveColor = pbrEmissive;
             }
         })
-        
+
         return scene;
     };
 }
 
-export default new Ex0();
+export default new TestScene();
