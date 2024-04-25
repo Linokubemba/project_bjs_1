@@ -45,22 +45,18 @@ export const babylonInit = async (): Promise<void> => {
     const testScene = await creatorTestScene.createScene(engine, canvas);
 
     const scenes: Scene[] = [home, testScene];
-    
+
     let currentScene = home;
 
-    if(UI.isReady())
-    {
+    if (UI.isReady()) {
         const buttons: GUI.Control[] = (UI.getTextureByName('UI') as GUI.AdvancedDynamicTexture).getControlsByType('Button');
-        if(buttons.length > 0)
-        {
+        if (buttons.length > 0) {
             for (let index = 0; index < buttons.length; index++) {
-                if(buttons[index].name != 'menuToggle')
-                {                
-                    buttons[index].onPointerUpObservable.add(()=>
-                    {
+                if (buttons[index].name != 'menuToggle') {
+                    buttons[index].onPointerUpObservable.add(() => {
                         currentScene = scenes[index];
-                    }); 
-                }               
+                    });
+                }
             }
         }
     }
@@ -70,8 +66,8 @@ export const babylonInit = async (): Promise<void> => {
 
     // Register a render loop to repeatedly render the scene
     engine.runRenderLoop(function () {
-        currentScene.render();
-        // testScene.render();
+        // currentScene.render();
+        testScene.render();
         // home.render();
         UI.render();
     });
