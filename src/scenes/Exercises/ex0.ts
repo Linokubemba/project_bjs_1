@@ -7,7 +7,7 @@ import { Scene } from "@babylonjs/core/scene";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
-import { CreateSceneClass } from "../createScene";
+import { CreateSceneClass } from "../../createScene";
 import { DirectionalLight } from "@babylonjs/core/Lights/directionalLight";
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
 import { PBRMaterial } from "@babylonjs/core/Materials/PBR/pbrMaterial";
@@ -17,7 +17,7 @@ import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 
 import * as earcut from "earcut";
 
-export class TestScene implements CreateSceneClass {
+export class Ex0 implements CreateSceneClass {
     createScene = async (
         engine: Engine,
         canvas: HTMLCanvasElement
@@ -114,16 +114,13 @@ export class TestScene implements CreateSceneClass {
 
         input.onKeyboardEventProcessedObservable.add((obj) => {
             const USERGUESS = Number(input.text);
-            if (obj.key === "Enter")
-            {
-                if  (USERGUESS === RANDOMGUESS)
-                {
+            if (obj.key === "Enter") {
+                if (USERGUESS === RANDOMGUESS) {
                     pbr.roughness = 0;
                     pbr.subSurface.tintColor = new Color3(0.1, 0.8, 0.3);
                     animate = true;
                 }
-                else if (USERGUESS < RANDOMGUESS)
-                {
+                else if (USERGUESS < RANDOMGUESS) {
                     input.text = "Too low!";
                 }
                 else { input.text = "Too high!"; }
@@ -179,4 +176,4 @@ export class TestScene implements CreateSceneClass {
     };
 }
 
-export default new TestScene();
+export default new Ex0();

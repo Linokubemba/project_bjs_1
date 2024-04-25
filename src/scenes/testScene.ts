@@ -28,7 +28,7 @@ export class TestScene implements CreateSceneClass {
         const camera = new ArcRotateCamera(
             "arcRotateCamera",
             0,
-            Math.PI/2,
+            Math.PI / 2,
             cameraRadius,
             new Vector3(0, 1, 0),
             scene
@@ -54,7 +54,7 @@ export class TestScene implements CreateSceneClass {
         pbr.subSurface.indexOfRefraction = 1.5;
         pbr.subSurface.tintColor = Color3.Black();
 
-        const torus = CreateTorusKnot("torus",{
+        const torus = CreateTorusKnot("torus", {
             radius: 1,
             tube: 0.5,
             radialSegments: 128,
@@ -64,7 +64,7 @@ export class TestScene implements CreateSceneClass {
         );
 
         torus.position.y = 1.2;
-        torus.rotation.y = Math.PI/2;
+        torus.rotation.y = Math.PI / 2;
         torus.material = pbr;
 
         //* ***************************************
@@ -72,7 +72,7 @@ export class TestScene implements CreateSceneClass {
 
         // INSTRUCTIONS
         const userInstructions = new TextBlock();
-        userInstructions.text = 
+        userInstructions.text =
             `PRIMER NUMBER COUNTER
             Press - or + to display the
             previous or the next prime number`;
@@ -80,7 +80,7 @@ export class TestScene implements CreateSceneClass {
         userInstructions.fontSize = 20;
         userInstructions.top = '30%';
         advancedTexture.addControl(userInstructions);
-        
+
         // BUTTONS
         const buttonUp = Button.CreateSimpleButton('buttonUp', '+')
         buttonUp.horizontalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
@@ -89,7 +89,7 @@ export class TestScene implements CreateSceneClass {
         buttonUp.height = '40px';
         buttonUp.color = 'green';
         buttonUp.background = 'teal';
-        if(buttonUp.textBlock != undefined)
+        if (buttonUp.textBlock != undefined)
             buttonUp.textBlock.color = 'white';
 
         const buttonDown = Button.CreateSimpleButton('buttonDown', '-')
@@ -99,7 +99,7 @@ export class TestScene implements CreateSceneClass {
         buttonDown.height = '40px';
         buttonDown.color = 'green';
         buttonDown.background = 'teal';
-        if(buttonDown.textBlock != undefined)
+        if (buttonDown.textBlock != undefined)
             buttonDown.textBlock.color = 'white';
 
         const stackPanel = new StackPanel();
@@ -109,26 +109,69 @@ export class TestScene implements CreateSceneClass {
         stackPanel.addControl(buttonUp);
         stackPanel.zIndex = 1000;
         advancedTexture.addControl(stackPanel);
-        
+
         // INTERACTIONS
         let counter: number = 2;
-        
+
         const counterDisplay = new TextBlock();
         counterDisplay.text = counter.toString();
         counterDisplay.color = "white";
         counterDisplay.fontSize = 56;
         counterDisplay.top = '-20%';
         advancedTexture.addControl(counterDisplay);
-        
+
+        /**
+         * 
+         * @param {num: number} 
+         * Chiffre actuel du counter
+         * @description Il va d'abord vérifier si le nombre est pair. 
+         *              S'il est impair alors il rentre dans la boucle for et on va venir 
+         *              s'il existe un diviseur. S'il en existe pas, alors c'est un nombre premier ! 
+         * @returns un bouléen s'il ets premier ou pas
+         */
         //TODO: Do something when buttons are pressed
-        buttonDown.onPointerUpObservable.add(()=>{
-            counter--;
-            counterDisplay.text = counter.toString();
+        function checkPrime(num: number) {
+            if (num % 2 === 0) return false;
+
+            for (let i: number = 3; i < Math.floor(num / 2); i++) {
+                if (num % i === 0) return false;
+            }
+            return true;
+        }
+
+        /**
+         * 
+         * @param {counter: number, next: string} 
+         * Counter num actuel, next, la direction du prochain 
+         * @returns le nombre premier suivant 
+         */
+        function nextNumber(counter: number, next: string): number {
+            if (next === "down") {
+                if (counter === 2) return 2;
+
+                for (let i: number = counter; i > 2; i--) {
+                    if (checkPrime(i)) return i;
+                }
+            }
+
+            let num = counter + 1;
+            while (!checkPrime(num)) {
+                num++;
+            }
+            return num;
+        }
+
+
+        buttonDown.onPointerUpObservable.add(() => {
+            const down: number = nextNumber(counter, "down");
+            counterDisplay.text = down.toString();
+            counter = down;
         });
 
-        buttonUp.onPointerUpObservable.add(()=>{
-            counter++;
-            counterDisplay.text = counter.toString();
+        buttonUp.onPointerUpObservable.add(() => {
+            const up: number = nextNumber(counter, "")
+            counterDisplay.text = up.toString();
+            counter = up;
         });
         //* ***************************************
 
@@ -159,7 +202,7 @@ export class TestScene implements CreateSceneClass {
         const env = scene.createDefaultEnvironment({
             createSkybox: true,
             skyboxSize: 150,
-            skyboxColor: new Color3(0.01,0.01,0.01),
+            skyboxColor: new Color3(0.01, 0.01, 0.01),
             createGround: false,
         });
 
