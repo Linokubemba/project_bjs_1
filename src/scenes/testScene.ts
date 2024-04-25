@@ -1,12 +1,11 @@
 /*
-* PRIME COUNTER
+* STAIRCASE SWITCHES
 */
 
 import { Engine } from "@babylonjs/core/Engines/engine";
 import { Scene } from "@babylonjs/core/scene";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
-import { CreateTorusKnot } from "@babylonjs/core/Meshes/Builders/torusKnotBuilder";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { CreateSceneClass } from "../createScene";
 import { DirectionalLight } from "@babylonjs/core/Lights/directionalLight";
@@ -14,6 +13,14 @@ import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
 import { PBRMaterial } from "@babylonjs/core/Materials/PBR/pbrMaterial";
 import { Color3 } from "@babylonjs/core/Maths/math.color";
 import { AdvancedDynamicTexture, Button, Control, StackPanel, TextBlock } from "@babylonjs/gui";
+import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
+import { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
+import { GlowLayer } from "@babylonjs/core/Layers/glowLayer";
+
+// Assets
+import lightbulbModel from "../../assets/glb/incandescent_light_bulb.glb";
+import point from "../../assets/img/point.png"
+import line from "../../assets/img/line.png"
 
 export class TestScene implements CreateSceneClass {
     createScene = async (
@@ -27,7 +34,7 @@ export class TestScene implements CreateSceneClass {
         const cameraRadius: number = 7;
         const camera = new ArcRotateCamera(
             "arcRotateCamera",
-            0,
+            Math.PI / 2,
             Math.PI / 2,
             cameraRadius,
             new Vector3(0, 1, 0),
@@ -46,138 +53,118 @@ export class TestScene implements CreateSceneClass {
         // This attaches the camera to the canvas
         camera.attachControl(canvas, true);
 
+        // Import 3D model
+        const importResult = await SceneLoader.ImportMeshAsync(
+            "",
+            "",
+            lightbulbModel,
+            scene,
+            undefined,
+            ".glb"
+        );
+
+        // Scale the meshes and isolate the glass bulb (for emission)
+        let bulb: AbstractMesh = new AbstractMesh('bulbPlaceholder');
+        importResult.meshes.forEach(mesh => {
+            mesh.scaling.scaleInPlace(4);
+
+            if (mesh.name === "Object_5")
+                bulb = mesh;
+        });
+
         //Create PBR material
         const pbr = new PBRMaterial("pbr", scene);
         pbr.metallic = 0;
-        pbr.roughness = 1;
+        pbr.roughness = 0;
         pbr.subSurface.isRefractionEnabled = true;
         pbr.subSurface.indexOfRefraction = 1.5;
-        pbr.subSurface.tintColor = Color3.Black();
+        pbr.subSurface.tintColor = Color3.White();
 
-        const torus = CreateTorusKnot("torus", {
-            radius: 1,
-            tube: 0.5,
-            radialSegments: 128,
-            tubularSegments: 128
-        },
-            scene
-        );
+        bulb.material = pbr;
 
-        torus.position.y = 1.2;
-        torus.rotation.y = Math.PI / 2;
-        torus.material = pbr;
-
-        //* ***************************************
+        /**************************** */
         const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI('UI');
 
         // INSTRUCTIONS
         const userInstructions = new TextBlock();
         userInstructions.text =
-            `PRIMER NUMBER COUNTER
-            Press - or + to display the
-            previous or the next prime number`;
+            `STAIRCASE SWTICHES
+            Use the switch buttons to control the light
+            The light is ON when both switches have the same shape`;
         userInstructions.color = "white";
         userInstructions.fontSize = 20;
         userInstructions.top = '30%';
         advancedTexture.addControl(userInstructions);
 
         // BUTTONS
-        const buttonUp = Button.CreateSimpleButton('buttonUp', '+')
-        buttonUp.horizontalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
-        buttonUp.cornerRadius = 5;
-        buttonUp.width = '200px';
-        buttonUp.height = '40px';
-        buttonUp.color = 'green';
-        buttonUp.background = 'teal';
-        if (buttonUp.textBlock != undefined)
-            buttonUp.textBlock.color = 'white';
+        let leftSwitch = Button.CreateImageOnlyButton("leftSwitch", point);
+        let rightSwitch = Button.CreateImageOnlyButton("rightSwitch", line);
 
-        const buttonDown = Button.CreateSimpleButton('buttonDown', '-')
-        buttonDown.horizontalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
-        buttonDown.cornerRadius = 5;
-        buttonDown.width = '200px';
-        buttonDown.height = '40px';
-        buttonDown.color = 'green';
-        buttonDown.background = 'teal';
-        if (buttonDown.textBlock != undefined)
-            buttonDown.textBlock.color = 'white';
+        leftSwitch.horizontalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+        leftSwitch.cornerRadius = 10;
+        leftSwitch.width = '50px';
+        leftSwitch.height = '50px';
+        leftSwitch.color = 'white';
+        leftSwitch.background = '#AAAAAA';
+        if (leftSwitch.textBlock != undefined)
+            leftSwitch.textBlock.color = 'white';
+
+        rightSwitch.horizontalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+        rightSwitch.cornerRadius = 10;
+        rightSwitch.width = '50px';
+        rightSwitch.height = '50px';
+        rightSwitch.color = 'white';
+        rightSwitch.background = '#AAAAAA';
+        if (rightSwitch.textBlock != undefined)
+            rightSwitch.textBlock.color = 'white';
 
         const stackPanel = new StackPanel();
+
         stackPanel.isVertical = false;
-        stackPanel.spacing = 5;
-        stackPanel.addControl(buttonDown);
-        stackPanel.addControl(buttonUp);
+        stackPanel.spacing = 50;
+        stackPanel.top = '10%';
+        stackPanel.addControl(leftSwitch);
+        stackPanel.addControl(rightSwitch);
         stackPanel.zIndex = 1000;
         advancedTexture.addControl(stackPanel);
 
-        // INTERACTIONS
-        let counter: number = 2;
-
-        const counterDisplay = new TextBlock();
-        counterDisplay.text = counter.toString();
-        counterDisplay.color = "white";
-        counterDisplay.fontSize = 56;
-        counterDisplay.top = '-20%';
-        advancedTexture.addControl(counterDisplay);
-
-        /**
-         * 
-         * @param {num: number} 
-         * Chiffre actuel du counter
-         * @description Il va d'abord vérifier si le nombre est pair. 
-         *              S'il est impair alors il rentre dans la boucle for et on va venir 
-         *              s'il existe un diviseur. S'il en existe pas, alors c'est un nombre premier ! 
-         * @returns un bouléen s'il ets premier ou pas
-         */
         //TODO: Do something when buttons are pressed
-        function checkPrime(num: number) {
-            if (num % 2 === 0) return false;
 
-            for (let i: number = 3; i < Math.floor(num / 2); i++) {
-                if (num % i === 0) return false;
+        let isLeftSwitchActive = false;
+        let isRightSwitchActive = false;
+
+        const toggleLeftSwitch = () => {
+            isLeftSwitchActive = !isLeftSwitchActive;
+            leftSwitch = Button.CreateImageOnlyButton("leftSwitch", line);
+            // Mettez ici le code pour changer l'apparence ou le comportement du bouton gauche selon son état
+        };
+
+        const toggleRightSwitch = () => {
+            isRightSwitchActive = !isRightSwitchActive;
+            rightSwitch = Button.CreateImageOnlyButton("rightSwitch", point);
+            // Mettez ici le code pour changer l'apparence ou le comportement du bouton droit selon son état
+        };
+
+        leftSwitch.onPointerUpObservable.add(() => {
+            toggleLeftSwitch();
+            pbr.emissiveColor = Color3.Black();
+            if (isLeftSwitchActive === isRightSwitchActive) {
+                pbr.emissiveColor = Color3.White();
             }
-            return true;
-        }
-
-        /**
-         * 
-         * @param {counter: number, next: string} 
-         * Counter num actuel, next, la direction du prochain 
-         * @returns le nombre premier suivant 
-         */
-        function nextNumber(counter: number, next: string): number {
-            if (next === "down") {
-                if (counter === 2) return 2;
-
-                for (let i: number = counter; i > 2; i--) {
-                    if (checkPrime(i)) return i;
-                }
-            }
-
-            let num = counter + 1;
-            while (!checkPrime(num)) {
-                num++;
-            }
-            return num;
-        }
-
-
-        buttonDown.onPointerUpObservable.add(() => {
-            const down: number = nextNumber(counter, "down");
-            counterDisplay.text = down.toString();
-            counter = down;
         });
 
-        buttonUp.onPointerUpObservable.add(() => {
-            const up: number = nextNumber(counter, "")
-            counterDisplay.text = up.toString();
-            counter = up;
+        rightSwitch.onPointerUpObservable.add(() => {
+            toggleRightSwitch();
+            pbr.emissiveColor = Color3.Black();
+            if (isLeftSwitchActive === isRightSwitchActive) {
+                pbr.emissiveColor = Color3.White();
+            }
         });
-        //* ***************************************
 
+        /**************************** */
 
         /////////
-        // LIGHTS
+        // ENV
         /////////
         //Directional light               
         const dlightPosition = new Vector3(0.02, -0.05, -0.05);
@@ -205,6 +192,12 @@ export class TestScene implements CreateSceneClass {
             skyboxColor: new Color3(0.01, 0.01, 0.01),
             createGround: false,
         });
+
+        const glow = new GlowLayer("glow", scene, {
+            mainTextureFixedSize: 2048,
+            blurKernelSize: 128,
+        });
+        glow.intensity = 0.5;
 
         return scene;
     };
