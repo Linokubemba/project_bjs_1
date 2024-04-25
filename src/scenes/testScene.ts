@@ -102,19 +102,33 @@ export class TestScene implements CreateSceneClass {
 
         // Allow numbers only
         input.onBeforeKeyAddObservable.add((input) => {
-            let key = input.currentKey;
+            const key = input.currentKey;
             if (key < "0" || key > "9") {
                 input.addKey = false;
             }
         });
 
         //TODO: Do something when "Enter" is pressed
+        const RANDOMGUESS: number = Math.floor(Math.random() * 10);
         let animate: boolean = false;
-        input.onKeyboardEventProcessedObservable.add(({ key }) => {
-            if (key === "Enter")
-                pbr.roughness = 0;
-            pbr.subSurface.tintColor = new Color3(0.1, 0.8, 0.3);
-            animate = true;
+
+        input.onKeyboardEventProcessedObservable.add((obj) => {
+            const USERGUESS = Number(input.text);
+            if (obj.key === "Enter")
+            {
+                if  (USERGUESS === RANDOMGUESS)
+                {
+                    pbr.roughness = 0;
+                    pbr.subSurface.tintColor = new Color3(0.1, 0.8, 0.3);
+                    animate = true;
+                }
+                else if (USERGUESS < RANDOMGUESS)
+                {
+                    input.text = "Too low!";
+                }
+                else { input.text = "Too high!"; }
+
+            }
         });
 
         advancedTexture.addControl(input);
